@@ -1,9 +1,8 @@
 import React from 'react'
 import { Component } from 'react'
-import { Routes,Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Redirect, Navigate } from 'react-router-dom'
 import { ApplicationPaths, QueryParameterNames } from './ApiAuthorizationConstants'
 import authService from './AuthorizeService'
-
 export default class AuthorizeRoute extends Component {
     constructor(props) {
         super(props);
@@ -24,20 +23,21 @@ export default class AuthorizeRoute extends Component {
     }
 
     render() {
-        const {  authenticated } = this.state;
+        const { ready, authenticated } = this.state;
         const redirectUrl = `${ApplicationPaths.Login}?${QueryParameterNames.ReturnUrl}=${encodeURI(window.location.href)}`
-      
+        if (!ready) {
+            return <div></div>;
+        } else {
             const { component: Component, ...rest } = this.props;
-        return
-        <Routes>
-        <Route {...rest}
+            return <Route {...rest}
                 render={(props) => {
-                  
-                 
-                        return <Navigate to={''} />
+                    if (authenticated) {
+                        return <Component {...props} />
+                    } else {
+                        return <Navigate to={redirectUrl} />
                     }
-                } />
-        </Routes>
+                }} />
+        }
     }
 
     async populateAuthenticationState() {

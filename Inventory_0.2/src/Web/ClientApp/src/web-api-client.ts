@@ -172,6 +172,183 @@ export class AuthenticationClient {
     }
 }
 
+export class ProductsClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getProductsWithPagination(warehouseId: string | null | undefined): Promise<ProductDto[]> {
+        let url_ = this.baseUrl + "/api/Products?";
+        if (warehouseId !== undefined && warehouseId !== null)
+            url_ += "WarehouseId=" + encodeURIComponent("" + warehouseId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetProductsWithPagination(_response);
+        });
+    }
+
+    protected processGetProductsWithPagination(response: Response): Promise<ProductDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ProductDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ProductDto[]>(null as any);
+    }
+
+    createProduct(command: AddProductCommand | undefined): Promise<ProductDto> {
+        let url_ = this.baseUrl + "/api/Products";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateProduct(_response);
+        });
+    }
+
+    protected processCreateProduct(response: Response): Promise<ProductDto> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProductDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ProductDto>(null as any);
+    }
+
+    getProductsByID(id: string | null): Promise<ProductDto[]> {
+        let url_ = this.baseUrl + "/api/Products/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetProductsByID(_response);
+        });
+    }
+
+    protected processGetProductsByID(response: Response): Promise<ProductDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ProductDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ProductDto[]>(null as any);
+    }
+
+    updateProduct(id: string | null, command: UpdateProductCommand | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Products/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateProduct(_response);
+        });
+    }
+
+    protected processUpdateProduct(response: Response): Promise<void> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export class TodoItemsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -901,6 +1078,186 @@ export class UserPageDto implements IUserPageDto {
 export interface IUserPageDto {
     totalUsers?: number;
     users?: UserDto[] | undefined;
+}
+
+export class ProductDto implements IProductDto {
+    wareHouseId?: string | undefined;
+    productId?: string | undefined;
+    materialName?: string | undefined;
+    unit?: string | undefined;
+    type?: string | undefined;
+    color?: string | undefined;
+    size?: string | undefined;
+    shelfId?: string | undefined;
+    cabinetId?: string | undefined;
+    quantityOnHand?: number;
+
+    constructor(data?: IProductDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.wareHouseId = _data["wareHouseId"];
+            this.productId = _data["productId"];
+            this.materialName = _data["materialName"];
+            this.unit = _data["unit"];
+            this.type = _data["type"];
+            this.color = _data["color"];
+            this.size = _data["size"];
+            this.shelfId = _data["shelfId"];
+            this.cabinetId = _data["cabinetId"];
+            this.quantityOnHand = _data["quantityOnHand"];
+        }
+    }
+
+    static fromJS(data: any): ProductDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProductDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["wareHouseId"] = this.wareHouseId;
+        data["productId"] = this.productId;
+        data["materialName"] = this.materialName;
+        data["unit"] = this.unit;
+        data["type"] = this.type;
+        data["color"] = this.color;
+        data["size"] = this.size;
+        data["shelfId"] = this.shelfId;
+        data["cabinetId"] = this.cabinetId;
+        data["quantityOnHand"] = this.quantityOnHand;
+        return data;
+    }
+}
+
+export interface IProductDto {
+    wareHouseId?: string | undefined;
+    productId?: string | undefined;
+    materialName?: string | undefined;
+    unit?: string | undefined;
+    type?: string | undefined;
+    color?: string | undefined;
+    size?: string | undefined;
+    shelfId?: string | undefined;
+    cabinetId?: string | undefined;
+    quantityOnHand?: number;
+}
+
+export class AddProductCommand implements IAddProductCommand {
+    productId?: string | undefined;
+    materialName?: string | undefined;
+    unit?: string | undefined;
+    type?: string | undefined;
+    color?: string | undefined;
+    size?: string | undefined;
+
+    constructor(data?: IAddProductCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.materialName = _data["materialName"];
+            this.unit = _data["unit"];
+            this.type = _data["type"];
+            this.color = _data["color"];
+            this.size = _data["size"];
+        }
+    }
+
+    static fromJS(data: any): AddProductCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddProductCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["materialName"] = this.materialName;
+        data["unit"] = this.unit;
+        data["type"] = this.type;
+        data["color"] = this.color;
+        data["size"] = this.size;
+        return data;
+    }
+}
+
+export interface IAddProductCommand {
+    productId?: string | undefined;
+    materialName?: string | undefined;
+    unit?: string | undefined;
+    type?: string | undefined;
+    color?: string | undefined;
+    size?: string | undefined;
+}
+
+export class UpdateProductCommand implements IUpdateProductCommand {
+    productId?: string | undefined;
+    materialName?: string | undefined;
+    type?: string | undefined;
+    color?: string | undefined;
+    size?: string | undefined;
+
+    constructor(data?: IUpdateProductCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.materialName = _data["materialName"];
+            this.type = _data["type"];
+            this.color = _data["color"];
+            this.size = _data["size"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProductCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProductCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["materialName"] = this.materialName;
+        data["type"] = this.type;
+        data["color"] = this.color;
+        data["size"] = this.size;
+        return data;
+    }
+}
+
+export interface IUpdateProductCommand {
+    productId?: string | undefined;
+    materialName?: string | undefined;
+    type?: string | undefined;
+    color?: string | undefined;
+    size?: string | undefined;
 }
 
 export class PaginatedListOfTodoItemBriefDto implements IPaginatedListOfTodoItemBriefDto {

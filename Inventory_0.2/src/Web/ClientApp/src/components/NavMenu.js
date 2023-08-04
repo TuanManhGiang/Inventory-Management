@@ -2,13 +2,25 @@
 import React, { Component } from 'react';
 import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
+
 import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
 
 
 import authService from './api-authorization/AuthorizeService'
 import { UserRoles } from './api-authorization/ApiAuthorizationConstants';
-
+import {
+    Space,
+    Typography,
+    Breadcrumb,
+    Layout,
+    Menu,
+    theme,
+    Row,
+    Col,
+    Avatar,
+} from "antd";
+const { Header, Content, Footer, Sider } = Layout;
 class NavMenu extends Component {
     static displayName = NavMenu.name;
 
@@ -43,7 +55,13 @@ class NavMenu extends Component {
     render() {
       
         return (
-            <header>
+  
+            <Header
+                style={{
+                    margin: "0 16px",
+                    background: "#fff",
+                }}
+            >
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" light>
                     <Container>
                         <NavbarBrand tag={Link} to="/">User Management React</NavbarBrand>
@@ -72,7 +90,7 @@ class NavMenu extends Component {
                         </Collapse>
                     </Container>
                 </Navbar>
-            </header>
+            </Header>
         );
     }
 }
