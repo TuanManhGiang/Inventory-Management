@@ -31,21 +31,21 @@ public class GetAllProductsQueryHandler : IRequestHandler<GetAllProductsQuery, L
         //return listProduct;
 
         var query = from product in _context.Products
-                    join productDetail in _context.ProductsDetails
-                    on product.ProductId equals productDetail.ProductId
-                    
+                   join productDetail in _context.ProductsDetails
+                    on product.ProductId equals productDetail.ProductId into pd
+                    from subpd in pd.DefaultIfEmpty()  
                     select new ProductDto
                     {
-                        ProductId = productDetail.ProductId,
-                        WareHouseId = productDetail.WarehouseId,
+                        ProductId = product.ProductId,
+                        WareHouseId = subpd != null ? subpd.WarehouseId : string.Empty,
                         MaterialName = product.MaterialName,
                         Unit = product.Unit,
                         Type = product.Type,
                         Color = product.Color,
                         Size = product.Size,
-                        ShelfId = productDetail.ShelfId,
-                        CabinetId = productDetail.CabinetId,
-                        QuantityOnHand = productDetail.QuantityOnHand
+                        ShelfId = subpd != null ? subpd.ShelfId : string.Empty,
+                        CabinetId = subpd != null ? subpd.CabinetId : string.Empty,
+                        QuantityOnHand = subpd != null ? subpd.QuantityOnHand : 0
                     };
         return await query.ToListAsync(cancellationToken);
 

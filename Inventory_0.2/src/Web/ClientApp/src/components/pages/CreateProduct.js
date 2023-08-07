@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Card, Space, Breadcrumb, Form, Input, Button } from 'antd';
+import { Card, Space, Breadcrumb, Form, Input, Button ,message} from 'antd';
 import { useNavigate } from "react-router-dom";
 import { ProductsClient } from "../../web-api-client.ts";
 const layout = {
@@ -20,9 +20,11 @@ const CreateProduct = () => {
             let client = new ProductsClient();
             const data = await client.createProduct(values);
             console.log(data);
+            message.success('Thêm sản phẩm thành công.')
             navigate("/AllProduct")
         } catch (error) {
             //handle api error
+            message.error('some thing wrong.');
             console.error('Error:', error);
         }
 

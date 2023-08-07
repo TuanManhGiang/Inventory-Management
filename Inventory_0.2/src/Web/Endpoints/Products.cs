@@ -14,7 +14,7 @@ public class Products : EndpointGroupBase
          
             .MapGet(GetProductsWithPagination)
             .MapGet(GetProductsByID,"{id}")
-            .MapGet(GetAllProducts)
+            .MapGet(GetAllProducts,"all")
             .MapPost(CreateProduct)
             .MapPut(UpdateProduct,"/{id}");
 
@@ -25,9 +25,9 @@ public class Products : EndpointGroupBase
     {
         return await sender.Send(query);
     }
-    public async Task<List<ProductDto>> GetAllProducts(ISender sender,  GetAllProductsQuery query)
+    public async Task<List<ProductDto>> GetAllProducts(ISender sender)
     {
-        return await sender.Send(query);
+        return await sender.Send(new GetAllProductsQuery());
     }
     public async Task<List<ProductDto>> GetProductsByID(ISender sender,string id)
     {

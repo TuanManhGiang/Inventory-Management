@@ -12,9 +12,13 @@ public interface IApplicationDbContext
 
     DbSet<ImportInvoiceDetail> ImportInvoiceDetails { get; }
 
+    DbSet<Supplier> Suppliers { get; }
+
     DbSet<TodoList> TodoLists { get; }
 
     DbSet<TodoItem> TodoItems { get; }
+
+    DbSet<Warehouse> Warehouses { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -347,6 +347,186 @@ export class ProductsClient {
         }
         return Promise.resolve<void>(null as any);
     }
+
+    getAllProducts(): Promise<ProductDto[]> {
+        let url_ = this.baseUrl + "/api/Products/all";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllProducts(_response);
+        });
+    }
+
+    protected processGetAllProducts(response: Response): Promise<ProductDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ProductDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ProductDto[]>(null as any);
+    }
+}
+
+export class SuppliersClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getAllSuppliers(): Promise<SupplierDto[]> {
+        let url_ = this.baseUrl + "/api/Suppliers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllSuppliers(_response);
+        });
+    }
+
+    protected processGetAllSuppliers(response: Response): Promise<SupplierDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SupplierDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SupplierDto[]>(null as any);
+    }
+
+    createSuppliers(command: AddSupplierCommand | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/Suppliers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateSuppliers(_response);
+        });
+    }
+
+    protected processCreateSuppliers(response: Response): Promise<string> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(null as any);
+    }
+
+    getSuppliersByName(name: string | null): Promise<SupplierDto[]> {
+        let url_ = this.baseUrl + "/api/Suppliers/{name}";
+        if (name === undefined || name === null)
+            throw new Error("The parameter 'name' must be defined.");
+        url_ = url_.replace("{name}", encodeURIComponent("" + name));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetSuppliersByName(_response);
+        });
+    }
+
+    protected processGetSuppliersByName(response: Response): Promise<SupplierDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SupplierDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SupplierDto[]>(null as any);
+    }
 }
 
 export class TodoItemsClient {
@@ -712,6 +892,59 @@ export class TodoListsClient {
             });
         }
         return Promise.resolve<void>(null as any);
+    }
+}
+
+export class WarehousesClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getAllWarehouses(): Promise<WarehouseDto[]> {
+        let url_ = this.baseUrl + "/api/Warehouses";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllWarehouses(_response);
+        });
+    }
+
+    protected processGetAllWarehouses(response: Response): Promise<WarehouseDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(WarehouseDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<WarehouseDto[]>(null as any);
     }
 }
 
@@ -1260,6 +1493,98 @@ export interface IUpdateProductCommand {
     size?: string | undefined;
 }
 
+export class SupplierDto implements ISupplierDto {
+    supplierName?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    status?: string | undefined;
+
+    constructor(data?: ISupplierDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.supplierName = _data["supplierName"];
+            this.address = _data["address"];
+            this.phone = _data["phone"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): SupplierDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SupplierDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["supplierName"] = this.supplierName;
+        data["address"] = this.address;
+        data["phone"] = this.phone;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface ISupplierDto {
+    supplierName?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+    status?: string | undefined;
+}
+
+export class AddSupplierCommand implements IAddSupplierCommand {
+    supplierName?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+
+    constructor(data?: IAddSupplierCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.supplierName = _data["supplierName"];
+            this.address = _data["address"];
+            this.phone = _data["phone"];
+        }
+    }
+
+    static fromJS(data: any): AddSupplierCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddSupplierCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["supplierName"] = this.supplierName;
+        data["address"] = this.address;
+        data["phone"] = this.phone;
+        return data;
+    }
+}
+
+export interface IAddSupplierCommand {
+    supplierName?: string | undefined;
+    address?: string | undefined;
+    phone?: string | undefined;
+}
+
 export class PaginatedListOfTodoItemBriefDto implements IPaginatedListOfTodoItemBriefDto {
     items?: TodoItemBriefDto[] | undefined;
     pageNumber?: number;
@@ -1793,6 +2118,50 @@ export class UpdateTodoListCommand implements IUpdateTodoListCommand {
 export interface IUpdateTodoListCommand {
     id?: number;
     title?: string | undefined;
+}
+
+export class WarehouseDto implements IWarehouseDto {
+    warehouseId?: string | undefined;
+    warehouseName?: string | undefined;
+    address?: string | undefined;
+
+    constructor(data?: IWarehouseDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.warehouseId = _data["warehouseId"];
+            this.warehouseName = _data["warehouseName"];
+            this.address = _data["address"];
+        }
+    }
+
+    static fromJS(data: any): WarehouseDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new WarehouseDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["warehouseId"] = this.warehouseId;
+        data["warehouseName"] = this.warehouseName;
+        data["address"] = this.address;
+        return data;
+    }
+}
+
+export interface IWarehouseDto {
+    warehouseId?: string | undefined;
+    warehouseName?: string | undefined;
+    address?: string | undefined;
 }
 
 export class WeatherForecast implements IWeatherForecast {

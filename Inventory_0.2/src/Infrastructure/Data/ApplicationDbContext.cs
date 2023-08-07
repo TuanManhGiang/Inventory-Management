@@ -23,6 +23,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<ImportInvoiceDetail> ImportInvoiceDetails => Set<ImportInvoiceDetail>();
 
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+
+    public DbSet<Warehouse> Warehouses => Set< Warehouse>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

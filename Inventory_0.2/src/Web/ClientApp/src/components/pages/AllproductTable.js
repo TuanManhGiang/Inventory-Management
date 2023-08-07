@@ -1,6 +1,6 @@
-﻿import { Table } from "antd";
+﻿import { Table, Button, Result } from "antd";
 import { ProductsClient } from "../../web-api-client.ts";
-import { useState, useEffect, Component } from "react";
+import {  Component } from "react";
 
 export class AllProductTable extends Component {
     static displayName = AllProductTable.name;
@@ -62,7 +62,7 @@ export class AllProductTable extends Component {
     static renderProductsTable(productList, columns) {
         return (
             <div>
-                <Table columns={columns} dataSource={productList} scroll={{ y: 500 }} pagination={true}>
+                <Table columns={columns} dataSource={productList} scroll={{ y: 300 }} pagination={true}>
 
                 </Table>
             </div>
@@ -71,9 +71,12 @@ export class AllProductTable extends Component {
 
     render() {
         let contents = this.state.loading ? (
-            <p>
-                <em>haven't data...</em>
-            </p>
+            <Result
+                status="404"
+                title="No Data"
+                subTitle="Sorry, you haven't data."
+                
+            />
         ) : (
             AllProductTable.renderProductsTable(
                 this.state.productList,
@@ -86,10 +89,10 @@ export class AllProductTable extends Component {
 
     async ProductsData() {
         
-        //let client = new ProductsClient();
-       // const data = await client.GetAllProducts();
+        let client = new ProductsClient();
+        const data = await client.getAllProducts();
 
-       // this.setState({ productList: data, loading: false });
+        this.setState({ productList: data, loading: false });
     }
 
     //async populateWeatherDataOld() {

@@ -58,6 +58,7 @@
 
     <ItemGroup>
       <Compile Remove="ClientApp\src\components\pages\AllProductTable.cs" />
+      <Compile Remove="ClientApp\src\components\pages\InvoiceInfor.cs" />
     </ItemGroup>
     
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
