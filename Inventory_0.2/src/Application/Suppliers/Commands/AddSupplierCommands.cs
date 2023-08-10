@@ -42,7 +42,7 @@ public class AddSupplierCommandHandler : IRequestHandler<AddSupplierCommand, str
         // Map the command data to the Product entity
         var supplier = new Supplier
         {
-            SupplierId = request.SupplierName+_dateTime.Now,
+            SupplierId = request.SupplierName+_dateTime.Now.GetHashCode(),
             SupplierName = request.SupplierName,
             Address = request.Address,
             Phone = request.Phone,

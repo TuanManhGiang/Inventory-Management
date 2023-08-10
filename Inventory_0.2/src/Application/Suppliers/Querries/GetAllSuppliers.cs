@@ -34,6 +34,7 @@ public class GetAllSuppliersHandler : IRequestHandler<GetAllSuppliers, List<Supp
         var query = from suplier in _context.Suppliers
                     select new SupplierDto
                     {
+                        SupplierId = suplier.SupplierId,
                         SupplierName = suplier.SupplierName,
                         Address = suplier.Address,
                         Phone = suplier.Phone,

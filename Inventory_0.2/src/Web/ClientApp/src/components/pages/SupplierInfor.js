@@ -1,116 +1,164 @@
-﻿import React, { useState } from 'react';
-import { Card, Space, Breadcrumb, Form, Input, Button, DatePicker, Select, Descriptions, Modal } from 'antd';
+﻿import React, { useState, Component } from 'react';
+import { Card, Space, Breadcrumb, Form, Input, Button, DatePicker, Select, Descriptions, Modal, message } from 'antd';
 import { useNavigate } from "react-router-dom";
-import { ProductsClient } from "../../web-api-client.ts";
+import { SuppliersClient } from "../../web-api-client.ts";
+import AddSupplier from './AddSupplier';
 
 
+export default class SupplierInfor extends Component {
+    formRef = React.createRef()
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: [],
+            option: [],
+            loading: true,
+            open: false,
+            selectedSupplier: {},
+            modalText:"Content of the modal"
+            
+        }
+    }
+    async SuppliersData() {
 
-const SupplierInfor = () => {
-    //const navigate = useNavigate();
-    //const [form] = Form.useForm();
-    //const onFinish = async (values) => {
-    //    try {
-    //        let client = new ProductsClient();
-    //        const data = await client.createProduct(values);
-    //        console.log(data);
+        let client = new SuppliersClient();
+        const data = await client.getAllSuppliers();
+        const formattedOptions = data.map((supplier) => ({
+            value: supplier.supplierId, // Replace 'id' with the property name in your warehouse data that serves as the option value
+            label: supplier.supplierName, // Replace 'name' with the property name in your warehouse data that serves as the option label
+        }));
+        console.log(data)
+        this.setState({ data: data, option: formattedOptions, loading: false });
+    }
+    componentDidMount() {
+        this.SuppliersData();
+    }
 
-    //        navigate("/AllProduct")
-    //    } catch (error) {
-    //        //handle api error
-    //        console.error('Error:', error);
-    //    }
-
-    //};
-    //const onReset = () => {
-    //    navigate("/AllProduct")
-    //};
-    const [open, setOpen] = useState(false);
-    // const [confirmLoading, setConfirmLoading] = useState(false);
-    const [modalText, setModalText] = useState('Content of the modal');
-    const showModal = () => {
-        setOpen(true);
-    };
-    const handleOk = () => {
-        setModalText('The modal will be closed after two seconds');
-        // setConfirmLoading(true);
-        setTimeout(() => {
-            setOpen(false);
-            //setConfirmLoading(false);
-        }, 2000);
-    };
-    const handleCancel = () => {
-        console.log('Clicked cancel button');
-        setOpen(false);
-    };
-
-    return (
-        <Card title="Thông tin nhà cung cấp" size="large">
+    render() {
+        const { data, option, loading, open, modalText, selectedSupplier } = this.state;
+       
         
-            <Form.Item
-                name="SupplierId"
-               
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Modal
-                    title="Thêm Nhà cung cấp"
-                    open={open}
-                    onOk={handleOk}
-                    //confirmLoading={confirmLoading}
-                    onCancel={handleCancel}
-                >
+        // const [confirmLoading, setConfirmLoading] = useState(false);
+    
+        const showModal = () => {
+            this.setState({open : true})
+        };
+        const handleOk = async (values) => {
+           
+                let client = new SuppliersClient();
+                const data = await client.createSuppliers(values);
+                console.log(data);
+                message.success('Thêm sản phẩm thành công.')
+          
 
-                </Modal>
+        };
+        const handleCancel = () => {
+            console.log('Clicked cancel button');
+            this.setState({ open: false })
+        };
+        const handleSelect = (value) => {
+            const selectedSupplier = data.find((supplier) => supplier.supplierId === value);
+            this.setState({ loading: true, selectedSupplier })
+            console.log(selectedSupplier)
+            
+        }
+        return (
+            <Card title="Thông tin nhà cung cấp" size="large">
 
-                <Select
-                    showSearch
-                    style={{ width: 400 }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                    filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                    }
-                    options={[
+                <Form.Item
+                    name="SupplierId"
+
+                    rules={[
                         {
-                            value: '1',
-                            label: 'Not Identified',
-                        },
-                        {
-                            value: '2',
-                            label: 'Closed',
-                        },
-                        {
-                            value: '3',
-                            label: 'Communicated',
-                        },
-                        {
-                            value: '4',
-                            label: 'Identified',
-                        },
-                        {
-                            value: '5',
-                            label: 'Resolved',
-                        },
-                        {
-                            value: '6',
-                            label: 'Cancelled',
+                            required: true,
                         },
                     ]}
+                >
 
-                />
-                <Button type="primary" onClick={showModal}>
-                    thêm nhà cung cấp
-                </Button>
+                    
+                    <Select
+                        showSearch
+                        style={{ width: 400 }}
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                        filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={option}
+                        
+                        onChange={handleSelect }
+
+                    />
                   
-                
-                <Descriptions title="Thông tin nhà cung cấp" />
-            </Form.Item>
+                </Form.Item>
+                <Modal
+                    title="Thêm Nhà cung cấp"
+                    open={this.state.open}
+                    onCancel={handleCancel}
+                    footer={null} 
+                >
+                 
+                        <Form onFinish={handleOk}
+                            style={{
+                                maxWidth: 600,
+                            }}  >
+                        <Form.Item label="Tên nhà cung cấp" name="supplierName" rules={[{ required: true }]}>
+                                <Input  />
+                        </Form.Item>
 
-        </Card>
-    )
+                        <Form.Item label="Địa chỉ" name="address" rules={[{ required: true }]}>
+                                <Input />
+                        </Form.Item>
+
+                        <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true }]}>
+                                <Input  />
+                            </Form.Item>
+                        
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                ghost
+                                size="midle"
+                                htmlType="submit"
+                                
+                            >
+                                Lưu
+                            </Button>
+                            <Button
+                                type="primary"
+                                size="midle"
+                                onClick={handleCancel}
+                                
+                            >
+                                Thoát
+                            </Button>
+                        </Form.Item>
+                        </div>
+                        </Form>
+                </Modal>
+                {/*<Button type="primary" onClick={showModal}>*/}
+                {/*    thêm nhà cung cấp*/}
+                {/*</Button>*/}
+
+                {this.state.loading ? (<Descriptions title="Thông tin nhà cung cấp" layout="vertical" >
+                   
+                     <Descriptions.Item label="Tên nhà cung cấp: ">{this.state.selectedSupplier.supplierName}</Descriptions.Item>
+                    
+                    
+                    <Descriptions.Item label="Telephone">{this.state.selectedSupplier.phone}</Descriptions.Item>
+                    <Descriptions.Item label="Address">
+                        {this.state.selectedSupplier.address}
+                        </Descriptions.Item>
+
+
+
+                </Descriptions>)
+
+                    : (<Descriptions title="Thông tin nhà cung cấp" />)}
+               
+            </Card>
+        )
+    }
 };
-export default SupplierInfor;

@@ -1,7 +1,7 @@
-﻿import React from 'react';
+﻿import React, { Component } from 'react';
 import { Card, Space, Breadcrumb, Form, Input, Button, DatePicker, Select } from 'antd';
 import { useNavigate } from "react-router-dom";
-import { ProductsClient } from "../../web-api-client.ts";
+import { WarehousesClient } from "../../web-api-client.ts";
 const layout = {
     labelCol: {
         span: 8,
@@ -12,149 +12,130 @@ const layout = {
 };
 
 
-const InvoiceInfor = () => {
-    //const navigate = useNavigate();
-    //const [form] = Form.useForm();
-    //const onFinish = async (values) => {
-    //    try {
-    //        let client = new ProductsClient();
-    //        const data = await client.createProduct(values);
-    //        console.log(data);
+export default class  InvoiceInfor extends Component  {
+    constructor(props) {
+        super(props);
+        this.state = {
+            option: [],
+            loading: true,
+        }
+    }
+    async WarehousesData() {
 
-    //        navigate("/AllProduct")
-    //    } catch (error) {
-    //        //handle api error
-    //        console.error('Error:', error);
-    //    }
+        let client = new WarehousesClient();
+        const data = await client.getAllWarehouses();
+        const formattedOptions = data.map((warehouse) => ({
+            value: warehouse.warehouseId, // Replace 'id' with the property name in your warehouse data that serves as the option value
+            label: warehouse.warehouseName, // Replace 'name' with the property name in your warehouse data that serves as the option label
+        }));
 
-    //};
-    //const onReset = () => {
-    //    navigate("/AllProduct")
-    //};
+        this.setState({ option: formattedOptions, loading: false });
+    }
+    componentDidMount() {
+        this.WarehousesData();
+    }
+    
+    render() {
+        const { option,loading } = this.state;
+        return (
+            <Card title="Thông tin đơn đặt hàng" size="large">
 
-
-    return (
-        <Card title="Thông tin đơn đặt hàng" size="large">
-            <Form.Item
-                name="WarehouseId"
-                label="Chi nhánh"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-            >
-                <Select
-                    showSearch
-                   // style={{ width: 200 }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                    filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                    }
-                    options={[
+                <Form.Item
+                    name="WarehouseId"
+                    label="Chi nhánh"
+                    rules={[
                         {
-                            value: '1',
-                            label: 'Not Identified',
-                        },
-                        {
-                            value: '2',
-                            label: 'Closed',
-                        },
-                        {
-                            value: '3',
-                            label: 'Communicated',
-                        },
-                        {
-                            value: '4',
-                            label: 'Identified',
-                        },
-                        {
-                            value: '5',
-                            label: 'Resolved',
-                        },
-                        {
-                            value: '6',
-                            label: 'Cancelled',
+                            required: true,
                         },
                     ]}
-                />
-            </Form.Item>
-            <Form.Item
-                name="EmployeeId"
-                label="Nhân viên"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input the material name',
-                    },
-                ]}
-            >
-                <Select
-                    showSearch
-                   // style={{ width: 200 }}
-                    placeholder="Search to Select"
-                    optionFilterProp="children"
-                    filterOption={(input, option) => (option?.label ?? '').includes(input)}
-                    filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                    }
-                    options={[
-                        {
-                            value: '1',
-                            label: 'Not Identified',
-                        },
-                        {
-                            value: '2',
-                            label: 'Closed',
-                        },
-                        {
-                            value: '3',
-                            label: 'Communicated',
-                        },
-                        {
-                            value: '4',
-                            label: 'Identified',
-                        },
-                        {
-                            value: '5',
-                            label: 'Resolved',
-                        },
-                        {
-                            value: '6',
-                            label: 'Cancelled',
-                        },
-                    ]}
-                />
-            </Form.Item>
-            <Form.Item
-                name="ImportDate"
-                label="Ngày nhập"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Please input the material name',
-                    },
-                ]}
-            >
-                <DatePicker
-                    cellRender={(current, info) => {
-                        if (info.type !== 'date') return info.originNode;
-                        const style = {};
-                        if (current.date() === 1) {
-                            style.border = '1px solid #1677ff';
-                            style.borderRadius = '50%';
+                >
+                    <Select
+                        showSearch
+                        // style={{ width: 200 }}
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                        filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
                         }
-                        return (
-                            <div className="ant-picker-cell-inner" style={style}>
-                                {current.date()}
-                            </div>
-                        );
-                    }}
-                />
-            </Form.Item>
-        </Card>
-    )
-};
-export default InvoiceInfor;
+                        options={option}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="EmployeeId"
+                    label="Nhân viên"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the material name',
+                        },
+                    ]}
+                >
+                    <Select
+                        showSearch
+                        // style={{ width: 200 }}
+                        placeholder="Search to Select"
+                        optionFilterProp="children"
+                        filterOption={(input, option) => (option?.label ?? '').includes(input)}
+                        filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={[
+                            {
+                                value: '1',
+                                label: 'Not Identified',
+                            },
+                            {
+                                value: '2',
+                                label: 'Closed',
+                            },
+                            {
+                                value: '3',
+                                label: 'Communicated',
+                            },
+                            {
+                                value: '4',
+                                label: 'Identified',
+                            },
+                            {
+                                value: '5',
+                                label: 'Resolved',
+                            },
+                            {
+                                value: '6',
+                                label: 'Cancelled',
+                            },
+                        ]}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="ImportDate"
+                    label="Ngày nhập"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the material name',
+                        },
+                    ]}
+                >
+                    <DatePicker
+                        cellRender={(current, info) => {
+                            if (info.type !== 'date') return info.originNode;
+                            const style = {};
+                            if (current.date() === 1) {
+                                style.border = '1px solid #1677ff';
+                                style.borderRadius = '50%';
+                            }
+                            return (
+                                <div className="ant-picker-cell-inner" style={style}>
+                                    {current.date()}
+                                </div>
+                            );
+                        }}
+                    />
+                </Form.Item>
+            </Card>
+        )
+    }
+
+}

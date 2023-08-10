@@ -27,6 +27,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<Warehouse> Warehouses => Set< Warehouse>();
 
+    public DbSet<ExportInvoice> ExportInvoices => Set<ExportInvoice>();
+
+    public DbSet<ExportInvoiceDetail> ExportInvoiceDetails => Set<ExportInvoiceDetail>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

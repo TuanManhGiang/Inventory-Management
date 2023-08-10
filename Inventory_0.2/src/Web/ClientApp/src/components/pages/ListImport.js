@@ -2,8 +2,9 @@
 import { Card, Space, Breadcrumb, Form, Input, Button, Col, Row } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { ProductsClient } from "../../web-api-client.ts";
-import InvoiceInfor from './InvoiceInfor';
+import InvoiceInfor from './InvoiceInfor'; 
 import SupplierInfor from './SupplierInfor';
+import ProductInvoiceInfor from './ProductInvoiceInfor';
 const layout = {
     labelCol: {
         span: 8,
@@ -79,57 +80,7 @@ const ListImport = () => {
                             </Col>
                         </Row>
                     </Space>
-                    <Card title="Thông tin sản phẩm" size="small">
-
-                        <Form.Item
-                            name="unit"
-                            label="Unit"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input the unit',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="type"
-                            label="Type"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="color"
-                            label="Color"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input the color',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="size"
-                            label="Size"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input the size',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Card>
+                    <ProductInvoiceInfor></ProductInvoiceInfor>
                     
                 </Space>
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

@@ -19,6 +19,8 @@ public partial class ExportInvoice
 
     public string ExportTo { get; set; }
 
+    public string Status { get; set; }  
+
     public virtual Employee CreatedByEmployee { get; set; }
 
     public virtual ICollection<ExportInvoiceDetail> ExportInvoiceDetails { get; } = new List<ExportInvoiceDetail>();

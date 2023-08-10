@@ -172,6 +172,357 @@ export class AuthenticationClient {
     }
 }
 
+export class ExportInvoicesClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getExportInvoiceByWarehouse(warehouseId: string | null): Promise<ExportInvoiceDto[]> {
+        let url_ = this.baseUrl + "/api/ExportInvoices/{warehouseId}";
+        if (warehouseId === undefined || warehouseId === null)
+            throw new Error("The parameter 'warehouseId' must be defined.");
+        url_ = url_.replace("{warehouseId}", encodeURIComponent("" + warehouseId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetExportInvoiceByWarehouse(_response);
+        });
+    }
+
+    protected processGetExportInvoiceByWarehouse(response: Response): Promise<ExportInvoiceDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ExportInvoiceDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ExportInvoiceDto[]>(null as any);
+    }
+
+    getExportInvoice(): Promise<ExportInvoiceDto[]> {
+        let url_ = this.baseUrl + "/api/ExportInvoices/all";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetExportInvoice(_response);
+        });
+    }
+
+    protected processGetExportInvoice(response: Response): Promise<ExportInvoiceDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ExportInvoiceDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ExportInvoiceDto[]>(null as any);
+    }
+
+    getExportInvoiceDetails(importId: string | null | undefined): Promise<ExportDetailsDto> {
+        let url_ = this.baseUrl + "/api/ExportInvoices/ExportDetails?";
+        if (importId !== undefined && importId !== null)
+            url_ += "ImportId=" + encodeURIComponent("" + importId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetExportInvoiceDetails(_response);
+        });
+    }
+
+    protected processGetExportInvoiceDetails(response: Response): Promise<ExportDetailsDto> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ExportDetailsDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ExportDetailsDto>(null as any);
+    }
+
+    createExportInvoices(command: CreateExportCommand | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/ExportInvoices";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateExportInvoices(_response);
+        });
+    }
+
+    protected processCreateExportInvoices(response: Response): Promise<string> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(null as any);
+    }
+}
+
+export class ImportInvoicesClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    getImportInvoiceByWarehouse(warehouseId: string | null): Promise<ImportInvoiceDto[]> {
+        let url_ = this.baseUrl + "/api/ImportInvoices/{warehouseId}";
+        if (warehouseId === undefined || warehouseId === null)
+            throw new Error("The parameter 'warehouseId' must be defined.");
+        url_ = url_.replace("{warehouseId}", encodeURIComponent("" + warehouseId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetImportInvoiceByWarehouse(_response);
+        });
+    }
+
+    protected processGetImportInvoiceByWarehouse(response: Response): Promise<ImportInvoiceDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ImportInvoiceDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ImportInvoiceDto[]>(null as any);
+    }
+
+    getImportInvoice(): Promise<ImportInvoiceDto[]> {
+        let url_ = this.baseUrl + "/api/ImportInvoices/all";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetImportInvoice(_response);
+        });
+    }
+
+    protected processGetImportInvoice(response: Response): Promise<ImportInvoiceDto[]> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ImportInvoiceDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ImportInvoiceDto[]>(null as any);
+    }
+
+    getImportInvoiceDetails(importId: string | null): Promise<ImportDetailsDto> {
+        let url_ = this.baseUrl + "/api/ImportInvoices/importDetails/{ImportId}";
+        if (importId === undefined || importId === null)
+            throw new Error("The parameter 'importId' must be defined.");
+        url_ = url_.replace("{ImportId}", encodeURIComponent("" + importId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetImportInvoiceDetails(_response);
+        });
+    }
+
+    protected processGetImportInvoiceDetails(response: Response): Promise<ImportDetailsDto> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ImportDetailsDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ImportDetailsDto>(null as any);
+    }
+
+    createImportInvoices(command: CreateImportCommand | undefined): Promise<string> {
+        let url_ = this.baseUrl + "/api/ImportInvoices";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateImportInvoices(_response);
+        });
+    }
+
+    protected processCreateImportInvoices(response: Response): Promise<string> {
+        followIfLoginRedirect(response);
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string>(null as any);
+    }
+}
+
 export class ProductsClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -1313,6 +1664,494 @@ export interface IUserPageDto {
     users?: UserDto[] | undefined;
 }
 
+export class ExportInvoiceDto implements IExportInvoiceDto {
+    exportId?: string | undefined;
+    createdDate?: Date;
+    exportDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    exportedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    exportTo?: string | undefined;
+    status?: string | undefined;
+
+    constructor(data?: IExportInvoiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.exportId = _data["exportId"];
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            this.exportDate = _data["exportDate"] ? new Date(_data["exportDate"].toString()) : <any>undefined;
+            this.createdByEmployeeId = _data["createdByEmployeeId"];
+            this.exportedByEmployeeId = _data["exportedByEmployeeId"];
+            this.warehouseId = _data["warehouseId"];
+            this.exportTo = _data["exportTo"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): ExportInvoiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ExportInvoiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["exportId"] = this.exportId;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["exportDate"] = this.exportDate ? this.exportDate.toISOString() : <any>undefined;
+        data["createdByEmployeeId"] = this.createdByEmployeeId;
+        data["exportedByEmployeeId"] = this.exportedByEmployeeId;
+        data["warehouseId"] = this.warehouseId;
+        data["exportTo"] = this.exportTo;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IExportInvoiceDto {
+    exportId?: string | undefined;
+    createdDate?: Date;
+    exportDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    exportedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    exportTo?: string | undefined;
+    status?: string | undefined;
+}
+
+export class ExportDetailsDto implements IExportDetailsDto {
+    importId?: string | undefined;
+    createdDate?: Date;
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    importedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    exportTo?: string | undefined;
+    status?: string | undefined;
+    exportDetailsDtos?: ExportDto[] | undefined;
+
+    constructor(data?: IExportDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.importId = _data["importId"];
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            this.importDate = _data["importDate"] ? new Date(_data["importDate"].toString()) : <any>undefined;
+            this.createdByEmployeeId = _data["createdByEmployeeId"];
+            this.importedByEmployeeId = _data["importedByEmployeeId"];
+            this.warehouseId = _data["warehouseId"];
+            this.exportTo = _data["exportTo"];
+            this.status = _data["status"];
+            if (Array.isArray(_data["exportDetailsDtos"])) {
+                this.exportDetailsDtos = [] as any;
+                for (let item of _data["exportDetailsDtos"])
+                    this.exportDetailsDtos!.push(ExportDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ExportDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ExportDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["importId"] = this.importId;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["importDate"] = this.importDate ? this.importDate.toISOString() : <any>undefined;
+        data["createdByEmployeeId"] = this.createdByEmployeeId;
+        data["importedByEmployeeId"] = this.importedByEmployeeId;
+        data["warehouseId"] = this.warehouseId;
+        data["exportTo"] = this.exportTo;
+        data["status"] = this.status;
+        if (Array.isArray(this.exportDetailsDtos)) {
+            data["exportDetailsDtos"] = [];
+            for (let item of this.exportDetailsDtos)
+                data["exportDetailsDtos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IExportDetailsDto {
+    importId?: string | undefined;
+    createdDate?: Date;
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    importedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    exportTo?: string | undefined;
+    status?: string | undefined;
+    exportDetailsDtos?: ExportDto[] | undefined;
+}
+
+export class ExportDto implements IExportDto {
+    productId?: string | undefined;
+    quantity?: number | undefined;
+    unitPrice?: number | undefined;
+
+    constructor(data?: IExportDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+        }
+    }
+
+    static fromJS(data: any): ExportDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ExportDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        return data;
+    }
+}
+
+export interface IExportDto {
+    productId?: string | undefined;
+    quantity?: number | undefined;
+    unitPrice?: number | undefined;
+}
+
+export class CreateExportCommand implements ICreateExportCommand {
+    exportDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    exportTo?: string | undefined;
+    exportDetailsDtos?: ExportDto[] | undefined;
+
+    constructor(data?: ICreateExportCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.exportDate = _data["exportDate"] ? new Date(_data["exportDate"].toString()) : <any>undefined;
+            this.createdByEmployeeId = _data["createdByEmployeeId"];
+            this.warehouseId = _data["warehouseId"];
+            this.exportTo = _data["exportTo"];
+            if (Array.isArray(_data["exportDetailsDtos"])) {
+                this.exportDetailsDtos = [] as any;
+                for (let item of _data["exportDetailsDtos"])
+                    this.exportDetailsDtos!.push(ExportDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateExportCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateExportCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["exportDate"] = this.exportDate ? this.exportDate.toISOString() : <any>undefined;
+        data["createdByEmployeeId"] = this.createdByEmployeeId;
+        data["warehouseId"] = this.warehouseId;
+        data["exportTo"] = this.exportTo;
+        if (Array.isArray(this.exportDetailsDtos)) {
+            data["exportDetailsDtos"] = [];
+            for (let item of this.exportDetailsDtos)
+                data["exportDetailsDtos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICreateExportCommand {
+    exportDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    exportTo?: string | undefined;
+    exportDetailsDtos?: ExportDto[] | undefined;
+}
+
+export class ImportInvoiceDto implements IImportInvoiceDto {
+    importId?: string | undefined;
+    createdDate?: Date;
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    importedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    supplierId?: string | undefined;
+    status?: string | undefined;
+
+    constructor(data?: IImportInvoiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.importId = _data["importId"];
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            this.importDate = _data["importDate"] ? new Date(_data["importDate"].toString()) : <any>undefined;
+            this.createdByEmployeeId = _data["createdByEmployeeId"];
+            this.importedByEmployeeId = _data["importedByEmployeeId"];
+            this.warehouseId = _data["warehouseId"];
+            this.supplierId = _data["supplierId"];
+            this.status = _data["status"];
+        }
+    }
+
+    static fromJS(data: any): ImportInvoiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ImportInvoiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["importId"] = this.importId;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["importDate"] = this.importDate ? this.importDate.toISOString() : <any>undefined;
+        data["createdByEmployeeId"] = this.createdByEmployeeId;
+        data["importedByEmployeeId"] = this.importedByEmployeeId;
+        data["warehouseId"] = this.warehouseId;
+        data["supplierId"] = this.supplierId;
+        data["status"] = this.status;
+        return data;
+    }
+}
+
+export interface IImportInvoiceDto {
+    importId?: string | undefined;
+    createdDate?: Date;
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    importedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    supplierId?: string | undefined;
+    status?: string | undefined;
+}
+
+export class ImportDetailsDto implements IImportDetailsDto {
+    importId?: string | undefined;
+    createdDate?: Date;
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    importedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    supplierId?: string | undefined;
+    status?: string | undefined;
+    importDetailsDtos?: ImportDto[] | undefined;
+
+    constructor(data?: IImportDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.importId = _data["importId"];
+            this.createdDate = _data["createdDate"] ? new Date(_data["createdDate"].toString()) : <any>undefined;
+            this.importDate = _data["importDate"] ? new Date(_data["importDate"].toString()) : <any>undefined;
+            this.createdByEmployeeId = _data["createdByEmployeeId"];
+            this.importedByEmployeeId = _data["importedByEmployeeId"];
+            this.warehouseId = _data["warehouseId"];
+            this.supplierId = _data["supplierId"];
+            this.status = _data["status"];
+            if (Array.isArray(_data["importDetailsDtos"])) {
+                this.importDetailsDtos = [] as any;
+                for (let item of _data["importDetailsDtos"])
+                    this.importDetailsDtos!.push(ImportDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ImportDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ImportDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["importId"] = this.importId;
+        data["createdDate"] = this.createdDate ? this.createdDate.toISOString() : <any>undefined;
+        data["importDate"] = this.importDate ? this.importDate.toISOString() : <any>undefined;
+        data["createdByEmployeeId"] = this.createdByEmployeeId;
+        data["importedByEmployeeId"] = this.importedByEmployeeId;
+        data["warehouseId"] = this.warehouseId;
+        data["supplierId"] = this.supplierId;
+        data["status"] = this.status;
+        if (Array.isArray(this.importDetailsDtos)) {
+            data["importDetailsDtos"] = [];
+            for (let item of this.importDetailsDtos)
+                data["importDetailsDtos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IImportDetailsDto {
+    importId?: string | undefined;
+    createdDate?: Date;
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    importedByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    supplierId?: string | undefined;
+    status?: string | undefined;
+    importDetailsDtos?: ImportDto[] | undefined;
+}
+
+export class ImportDto implements IImportDto {
+    productId?: string | undefined;
+    quantity?: number | undefined;
+    unitPrice?: number | undefined;
+
+    constructor(data?: IImportDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productId = _data["productId"];
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+        }
+    }
+
+    static fromJS(data: any): ImportDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ImportDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productId"] = this.productId;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        return data;
+    }
+}
+
+export interface IImportDto {
+    productId?: string | undefined;
+    quantity?: number | undefined;
+    unitPrice?: number | undefined;
+}
+
+export class CreateImportCommand implements ICreateImportCommand {
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    supplierId?: string | undefined;
+    importDetailsDtos?: ImportDto[] | undefined;
+
+    constructor(data?: ICreateImportCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.importDate = _data["importDate"] ? new Date(_data["importDate"].toString()) : <any>undefined;
+            this.createdByEmployeeId = _data["createdByEmployeeId"];
+            this.warehouseId = _data["warehouseId"];
+            this.supplierId = _data["supplierId"];
+            if (Array.isArray(_data["importDetailsDtos"])) {
+                this.importDetailsDtos = [] as any;
+                for (let item of _data["importDetailsDtos"])
+                    this.importDetailsDtos!.push(ImportDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateImportCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateImportCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["importDate"] = this.importDate ? this.importDate.toISOString() : <any>undefined;
+        data["createdByEmployeeId"] = this.createdByEmployeeId;
+        data["warehouseId"] = this.warehouseId;
+        data["supplierId"] = this.supplierId;
+        if (Array.isArray(this.importDetailsDtos)) {
+            data["importDetailsDtos"] = [];
+            for (let item of this.importDetailsDtos)
+                data["importDetailsDtos"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface ICreateImportCommand {
+    importDate?: Date;
+    createdByEmployeeId?: string | undefined;
+    warehouseId?: string | undefined;
+    supplierId?: string | undefined;
+    importDetailsDtos?: ImportDto[] | undefined;
+}
+
 export class ProductDto implements IProductDto {
     wareHouseId?: string | undefined;
     productId?: string | undefined;
@@ -1494,6 +2333,7 @@ export interface IUpdateProductCommand {
 }
 
 export class SupplierDto implements ISupplierDto {
+    supplierId?: string | undefined;
     supplierName?: string | undefined;
     address?: string | undefined;
     phone?: string | undefined;
@@ -1510,6 +2350,7 @@ export class SupplierDto implements ISupplierDto {
 
     init(_data?: any) {
         if (_data) {
+            this.supplierId = _data["supplierId"];
             this.supplierName = _data["supplierName"];
             this.address = _data["address"];
             this.phone = _data["phone"];
@@ -1526,6 +2367,7 @@ export class SupplierDto implements ISupplierDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["supplierId"] = this.supplierId;
         data["supplierName"] = this.supplierName;
         data["address"] = this.address;
         data["phone"] = this.phone;
@@ -1535,6 +2377,7 @@ export class SupplierDto implements ISupplierDto {
 }
 
 export interface ISupplierDto {
+    supplierId?: string | undefined;
     supplierName?: string | undefined;
     address?: string | undefined;
     phone?: string | undefined;

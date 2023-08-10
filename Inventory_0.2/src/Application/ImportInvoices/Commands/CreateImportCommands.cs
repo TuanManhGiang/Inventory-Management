@@ -22,6 +22,8 @@ public record CreateImportCommand : IRequest<string>
 
     public string SupplierId { get; set; }
 
+    public List<ImportDto> ImportDetailsDtos { get; set; }
+
 
     // Add any other properties needed for creating a product
 }
@@ -45,12 +47,13 @@ public class CreateImportCommandHandler : IRequestHandler<CreateImportCommand, s
         // Map the command data to the Product entity
         var entity = new ImportInvoice
         {
-            ImportId = request.WarehouseId+ request.CreatedByEmployeeId+ _dateTime.Now,
+            ImportId = request.WarehouseId+ request.CreatedByEmployeeId+ _dateTime.Now.GetHashCode(),
             CreatedDate= _dateTime.Now,
             ImportDate = request.ImportDate,
             CreatedByEmployeeId = request.CreatedByEmployeeId,
             WarehouseId = request.WarehouseId,
             SupplierId = request.SupplierId,
+            Status = "Chưa nhập"
         };
 
         
@@ -58,6 +61,25 @@ public class CreateImportCommandHandler : IRequestHandler<CreateImportCommand, s
         catch (Exception ex) {
         throw new Exception(ex.ToString());
         }
+        foreach(ImportDto importDetailsDto in request.ImportDetailsDtos) {
+
+            var importdetails = new ImportInvoiceDetail
+            {
+                ImportId = entity.ImportId,
+                ProductId = importDetailsDto.ProductId,
+                Quantity = importDetailsDto.Quantity,
+                UnitPrice = importDetailsDto.UnitPrice,
+
+            };
+            try { _context.ImportInvoiceDetails.Add(importdetails); }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+                
+            }
+           
+        }
+
         //entity.AddDomainEvent(new TodoItemCreatedEvent(entity));
         await _context.SaveChangesAsync(cancellationToken);
 

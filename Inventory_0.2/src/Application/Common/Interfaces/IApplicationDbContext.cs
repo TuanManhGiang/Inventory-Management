@@ -11,6 +11,9 @@ public interface IApplicationDbContext
     DbSet<ImportInvoice> ImportInvoices { get; }
 
     DbSet<ImportInvoiceDetail> ImportInvoiceDetails { get; }
+    DbSet<ExportInvoice> ExportInvoices { get; }
+
+    DbSet<ExportInvoiceDetail> ExportInvoiceDetails { get; }
 
     DbSet<Supplier> Suppliers { get; }
 
@@ -19,6 +22,8 @@ public interface IApplicationDbContext
     DbSet<TodoItem> TodoItems { get; }
 
     DbSet<Warehouse> Warehouses { get; }
+
+    
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

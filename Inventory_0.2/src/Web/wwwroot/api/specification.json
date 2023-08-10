@@ -122,6 +122,249 @@
         }
       }
     },
+    "/api/ExportInvoices/{warehouseId}": {
+      "get": {
+        "tags": [
+          "ExportInvoices"
+        ],
+        "operationId": "GetExportInvoiceByWarehouse",
+        "parameters": [
+          {
+            "name": "warehouseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExportInvoiceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExportInvoices/all": {
+      "get": {
+        "tags": [
+          "ExportInvoices"
+        ],
+        "operationId": "GetExportInvoice",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExportInvoiceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExportInvoices/ExportDetails": {
+      "get": {
+        "tags": [
+          "ExportInvoices"
+        ],
+        "operationId": "GetExportInvoiceDetails",
+        "parameters": [
+          {
+            "name": "ImportId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportDetailsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExportInvoices": {
+      "post": {
+        "tags": [
+          "ExportInvoices"
+        ],
+        "operationId": "CreateExportInvoices",
+        "requestBody": {
+          "x-name": "command",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExportCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ImportInvoices/{warehouseId}": {
+      "get": {
+        "tags": [
+          "ImportInvoices"
+        ],
+        "operationId": "GetImportInvoiceByWarehouse",
+        "parameters": [
+          {
+            "name": "warehouseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ImportInvoiceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ImportInvoices/all": {
+      "get": {
+        "tags": [
+          "ImportInvoices"
+        ],
+        "operationId": "GetImportInvoice",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ImportInvoiceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ImportInvoices/importDetails/{ImportId}": {
+      "get": {
+        "tags": [
+          "ImportInvoices"
+        ],
+        "operationId": "GetImportInvoiceDetails",
+        "parameters": [
+          {
+            "name": "ImportId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportDetailsDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ImportInvoices": {
+      "post": {
+        "tags": [
+          "ImportInvoices"
+        ],
+        "operationId": "CreateImportInvoices",
+        "requestBody": {
+          "x-name": "command",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateImportCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Products": {
       "get": {
         "tags": [
@@ -826,6 +1069,270 @@
           }
         }
       },
+      "ExportInvoiceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exportId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "exportDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "exportedByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "exportTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ExportDetailsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "importId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "importDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "importedByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "exportTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "exportDetailsDtos": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ExportDto"
+            }
+          }
+        }
+      },
+      "ExportDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "productId": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "CreateExportCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exportDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "exportTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "exportDetailsDtos": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ExportDto"
+            }
+          }
+        }
+      },
+      "ImportInvoiceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "importId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "importDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "importedByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "supplierId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ImportDetailsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "importId": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "importDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "importedByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "supplierId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "importDetailsDtos": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ImportDto"
+            }
+          }
+        }
+      },
+      "ImportDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "productId": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        }
+      },
+      "CreateImportCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "importDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByEmployeeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "warehouseId": {
+            "type": "string",
+            "nullable": true
+          },
+          "supplierId": {
+            "type": "string",
+            "nullable": true
+          },
+          "importDetailsDtos": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ImportDto"
+            }
+          }
+        }
+      },
       "ProductDto": {
         "type": "object",
         "additionalProperties": false,
@@ -932,6 +1439,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "supplierId": {
+            "type": "string",
+            "nullable": true
+          },
           "supplierName": {
             "type": "string",
             "nullable": true
